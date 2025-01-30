@@ -2,9 +2,11 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { api } from '@/trpc/react';
 import { CircleGauge } from 'lucide-react';
 import React from 'react'
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type FormInput = {
   repoUrl: string;
@@ -14,10 +16,22 @@ type FormInput = {
 
 const Create = () => {
   const { register, handleSubmit, reset } = useForm<FormInput>();
+  const createProject = api.project.createProject.useMutation();
 
   const onSubmit = (data: FormInput) => {
-    console.log(data);
-    return true;
+    createProject.mutate({
+      githubUrl: data.repoUrl,
+      name: data.projectName,
+      githubToken: data.githubToken
+    }, {
+      onSuccess: () => {
+        toast.success('Project created Successfully');
+        reset();
+      },
+      onError: () => {
+        toast.error('Failed to create Project')
+      }
+    })
   }
 
   return (
@@ -50,14 +64,16 @@ const Create = () => {
 
             <div className='h-2 mt-2'/>
             <Input 
-              required
               { ...register('githubToken') }
               placeholder='Github Token'
             />
 
             <div className='h-4'/>
             <div className='flex justify-end'>
-              <Button type='submit'>
+              <Button 
+                type='submit'
+                disabled={createProject.isPending}
+              >
                 Create Project
               </Button>
             </div>
