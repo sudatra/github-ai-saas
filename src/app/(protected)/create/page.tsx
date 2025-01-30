@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import useRefetch from '@/hooks/use-refetch';
 import { api } from '@/trpc/react';
 import { CircleGauge } from 'lucide-react';
 import React from 'react'
@@ -17,6 +18,7 @@ type FormInput = {
 const Create = () => {
   const { register, handleSubmit, reset } = useForm<FormInput>();
   const createProject = api.project.createProject.useMutation();
+  const refetch = useRefetch();
 
   const onSubmit = (data: FormInput) => {
     createProject.mutate({
@@ -26,6 +28,7 @@ const Create = () => {
     }, {
       onSuccess: () => {
         toast.success('Project created Successfully');
+        refetch();
         reset();
       },
       onError: () => {
