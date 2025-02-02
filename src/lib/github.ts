@@ -1,5 +1,7 @@
 import { db } from '@/server/db';
 import { Octokit } from 'octokit';
+import axios from 'axios';
+import { aiSummarizeCommit } from './gemini';
 
 type Response = {
   commitMessage: string;
@@ -38,6 +40,34 @@ export const pollCommits = async (projectId: string) => {
   const { project, githubUrl } = await fetchProjectGithubUrl(projectId);
   const commitHashes = await getCommitHashes(githubUrl);
   const unprocessedCommits = await filterUnprocessedCommits(projectId, commitHashes);
+  const commitSummaryResponses = await Promise.allSettled(unprocessedCommits.map(commit => {
+    return summarizeCommit(githubUrl, commit.commitHash);
+  }))
+
+  const commitSummaries = commitSummaryResponses.map((response) => {
+    if(response.status === 'fulfilled') {
+      return response.value;
+    }
+
+    return "";
+  });
+
+  const commits = await db.commit.createMany({
+    
+    data: commitSummaries.map((summary: any, index) => {
+      return {
+        projectId: projectId,
+        commitHash: unprocessedCommits[index]!.commitHash,
+        commitMessage: unprocessedCommits[index]!.commitMessage,
+        commitAuthorName: unprocessedCommits[index]!.commitAuthorName,
+        commitAuthorAvatar: unprocessedCommits[index]!.commitAuthorAvatar,
+        commitDate: unprocessedCommits[index]!.commitDate,
+        summary
+      }
+    })
+  });
+
+  return commits;
 }
 
 const fetchProjectGithubUrl = async (projectId: string) => {
@@ -64,6 +94,12 @@ const filterUnprocessedCommits = async (projectId: string, commitHashes: Respons
   return unprocessedCommits;
 }
 
-const summarizeCommits = async (githubUrl: string, commitHash: string) => {
+const summarizeCommit = async (githubUrl: string, commitHash: string) => {
+  const { data } = await axios.get(`${githubUrl}/commit/${commitHash}.diff`, {
+    headers: {
+      Accept: 'application/vnd.github.v3.diff'
+    }
+  });
 
+  return await aiSummarizeCommit(data);
 }
