@@ -7,15 +7,42 @@ import { Textarea } from '@/components/ui/textarea';
 import useProject from '@/hooks/use-project'
 import { CircleAlert } from 'lucide-react';
 import React, { FormEvent, useState } from 'react'
+import { askQuestion } from './actions';
+import { readStreamableValue } from 'ai/rsc';
+
+interface FilesReference {
+  fileName: string;
+  sourceCode: string;
+  summary: string;
+}
 
 const AskQuestionCard = () => {
   const { project } = useProject();
   const [question, setQuestion] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [filesReferences, setFilesReferences] = useState<FilesReference[]>([]);
+  const [answer, setAnswer] = useState<string>('');
 
-  const onQuestionSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onQuestionSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if(!project?.id) {  
+      return;
+    }
+
+    setLoading(true);
     setOpen(true);
+
+    const { output, fileReferences } = await askQuestion(question, project.id);
+    setFilesReferences(fileReferences);
+
+    for await (const delta of readStreamableValue(output)) {
+      if(delta) {
+        setAnswer((ans: any) => ans + delta);
+      }
+    }
+
+    setLoading(false);
   }
 
   return (
@@ -33,6 +60,15 @@ const AskQuestionCard = () => {
               />
             </DialogTitle>
           </DialogHeader>
+
+          {answer}
+
+          <h1>File References</h1>
+          {
+            filesReferences.map((file) => (
+              <span>{file.fileName}</span>
+            ))
+          }
         </DialogContent>
       </Dialog>
 

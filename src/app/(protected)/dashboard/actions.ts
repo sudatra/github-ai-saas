@@ -56,7 +56,7 @@ export const askQuestion = async (question: string, projectId: string) => {
   })();
 
   return {
-    output: stream,
+    output: stream.value,
     fileReferences: result
   }
 }
