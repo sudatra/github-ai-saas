@@ -9,8 +9,10 @@ import { CircleAlert } from 'lucide-react';
 import React, { FormEvent, useState } from 'react'
 import { askQuestion } from './actions';
 import { readStreamableValue } from 'ai/rsc';
+import MDEditor from '@uiw/react-md-editor';
+import CodeReferences from './code-references';
 
-interface FilesReference {
+export interface FilesReference {
   fileName: string;
   sourceCode: string;
   summary: string;
@@ -25,6 +27,8 @@ const AskQuestionCard = () => {
   const [answer, setAnswer] = useState<string>('');
 
   const onQuestionSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    setAnswer('');
+    setFilesReferences([]);
     e.preventDefault();
     if(!project?.id) {  
       return;
@@ -51,7 +55,7 @@ const AskQuestionCard = () => {
         open={open}
         onOpenChange={setOpen}
       >
-        <DialogContent>
+        <DialogContent className='sm:max-w-[80vw]'>
           <DialogHeader>
             <DialogTitle>
               <CircleAlert 
@@ -61,14 +65,20 @@ const AskQuestionCard = () => {
             </DialogTitle>
           </DialogHeader>
 
-          {answer}
+          <MDEditor.Markdown 
+            source={answer}
+            className='max-w-[70vw] !h-full max-h-[40vh] overflow-scroll'
+          />
 
-          <h1>File References</h1>
-          {
-            filesReferences.map((file) => (
-              <span>{file.fileName}</span>
-            ))
-          }
+          <div className='h-4' />
+          <CodeReferences filesReferences={filesReferences} />
+
+          <Button
+            type='button'
+            onClick={() => setOpen(false)}
+          >
+            Close
+          </Button>
         </DialogContent>
       </Dialog>
 
@@ -90,6 +100,7 @@ const AskQuestionCard = () => {
               <Button 
                 type='submit'
                 className='w-24 text-sm font-semibold'
+                disabled={loading}
               >
                 Ask
               </Button>
