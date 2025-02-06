@@ -13,6 +13,7 @@ import MDEditor from '@uiw/react-md-editor';
 import CodeReferences from './code-references';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
+import useRefetch from '@/hooks/use-refetch';
 
 export interface FilesReference {
   fileName: string;
@@ -27,6 +28,7 @@ const AskQuestionCard = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [filesReferences, setFilesReferences] = useState<FilesReference[]>([]);
   const [answer, setAnswer] = useState<string>('');
+  const refetch = useRefetch();
   const saveAnswer = api.project.saveAnswer.useMutation();
 
   const onQuestionSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -77,7 +79,10 @@ const AskQuestionCard = () => {
                   answer,
                   filesReference: filesReferences
                 }, {
-                  onSuccess: () => { toast.success('Answer Saved') },
+                  onSuccess: () => {
+                    toast.success('Answer Saved');
+                    refetch();
+                  },
                   onError: () => { toast.error('Error Saving Answer!') }
                 })}
               >
