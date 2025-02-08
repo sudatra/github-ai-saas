@@ -18,7 +18,7 @@ const CodeReferences = ({ filesReferences }: Props) => {
   }
 
   return (
-    <div className='max-w-[70vw]'>
+    <div className='max-w-full'>
       <Tabs
         value={tab}
         onValueChange={setTab}
@@ -31,7 +31,7 @@ const CodeReferences = ({ filesReferences }: Props) => {
                 className={cn(
                   'px-3 py-1.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap text-muted-foreground hover:bg-muted',
                   {
-                    'bg-primary text-primary-foreground': tab === file.fileName
+                    'bg-primary text-primary-foreground hover:text-black': tab === file.fileName
                   }
                 )}
                 onClick={() => setTab(file.fileName)}
@@ -47,7 +47,7 @@ const CodeReferences = ({ filesReferences }: Props) => {
             <TabsContent
               key={file.fileName}
               value={file.fileName}
-              className='max-h-[40vh] overflow-scroll max-w-7xl rounded-md'
+              className='max-h-[40vh] overflow-scroll w-full rounded-md'
             >
               <SyntaxHighlighter
                 language='typescript'

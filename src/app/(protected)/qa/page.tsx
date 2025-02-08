@@ -56,7 +56,11 @@ const QAPage = () => {
           <SheetContent className='sm:max-w-[80vw] overflow-scroll'>
             <SheetHeader>
               <SheetTitle>{question.question}</SheetTitle>
-              <MDEditor.Markdown source={question.answer} />
+              <MDEditor.Markdown 
+                source={question.answer} 
+                className='p-3' 
+              />
+              
               <CodeReferences filesReferences={(question.filesReferences ?? []) as any} />
             </SheetHeader>
           </SheetContent>
