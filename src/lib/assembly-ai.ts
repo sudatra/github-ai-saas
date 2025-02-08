@@ -22,12 +22,13 @@ export const processMeeting = async (meetingUrl: string) => {
     start: msToTime(chapter.start),
     end: msToTime(chapter.end),
     gist: chapter.gist,
-    headline: chapter.headline
+    headline: chapter.headline,
+    summary: chapter.summary
   })) || [];
-  
+
   if(!transcript.text) {
     throw new Error("No transcript found");
   }
 
-  return { transcript, summaries };
+  return { summaries };
 }

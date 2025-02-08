@@ -98,7 +98,9 @@ export const projectRouter = createTRPCRouter({
         name: input.name,
         status: "PROCESSING"
       }
-    })
+    });
+
+    return meeting;
   }),
 
   getMeetings: protectedProcedure.input(

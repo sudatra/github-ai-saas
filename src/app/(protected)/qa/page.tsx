@@ -38,7 +38,7 @@ const QAPage = () => {
 
                   <div className='text-left flex flex-col'>
                     <div className='flex items-center gap-2'>
-                      <p className='text-gray-700 line-clamp-1 text-lg font-medium'>{question.question}</p>
+                      <p className='text-gray-700 line-clamp-1 text-lg font-medium capitalize'>{question.question}</p>
                       <span className='text-xs text-gray-400 whitespace-nowrap'>{question.createdAt.toLocaleDateString()}</span>
                     </div>
 
@@ -55,12 +55,14 @@ const QAPage = () => {
         question && (
           <SheetContent className='sm:max-w-[80vw] overflow-scroll'>
             <SheetHeader>
-              <SheetTitle>{question.question}</SheetTitle>
+              <SheetTitle>
+                <p className='capitalize'>{question.question}</p>
+              </SheetTitle>
               <MDEditor.Markdown 
                 source={question.answer} 
                 className='p-3' 
               />
-              
+
               <CodeReferences filesReferences={(question.filesReferences ?? []) as any} />
             </SheetHeader>
           </SheetContent>
