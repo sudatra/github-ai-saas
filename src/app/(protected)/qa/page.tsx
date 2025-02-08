@@ -53,7 +53,7 @@ const QAPage = () => {
 
       {
         question && (
-          <SheetContent className='sm:max-w-[80vw]'>
+          <SheetContent className='sm:max-w-[80vw] overflow-scroll'>
             <SheetHeader>
               <SheetTitle>{question.question}</SheetTitle>
               <MDEditor.Markdown source={question.answer} />
