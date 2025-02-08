@@ -37,7 +37,7 @@ export const uploadFile = async (file: File, setProgress?: (progress: number) =>
         reject(error);
       }, () => {
         getDownloadURL(uploadTask.snapshot.ref)
-        .then(donwloadUrl => { resolve(donwloadUrl) })
+        .then(donwloadUrl => { resolve(donwloadUrl as string) })
       })
     }
     catch(error) {
