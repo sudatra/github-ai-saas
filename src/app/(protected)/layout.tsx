@@ -14,8 +14,6 @@ const Sidebarlayout = ({ children }: Props) => {
 
       <main className='w-full m-2'>
         <div className='flex items-center gap-2 bg-sidebar border shadow rounded-md p-2 px-4'>
-          Searchbar
-
           <div className='ml-auto' />
           <UserButton />
         </div>
