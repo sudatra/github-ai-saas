@@ -1,9 +1,9 @@
 import { api } from "@/trpc/react"
-import { useLocalStorage } from 'usehooks-ts'
+import { useSessionStorage } from 'usehooks-ts'
 
 const useProject = () => {
   const { data: projects } = api.project.getAllProjects.useQuery();
-  const [projectId, setProjectId] = useLocalStorage('githubSaas-projectId', '')
+  const [projectId, setProjectId] = useSessionStorage('githubSaas-projectId', '')
   const project = projects?.find(project => project.id === projectId)
 
 
