@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import useProject from "@/hooks/use-project"
 import { cn } from "@/lib/utils"
 import { Bot, CircleAlert, CreditCard, LayoutDashboardIcon, Plus, Presentation } from "lucide-react"
@@ -40,16 +40,20 @@ export function AppSidebar() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="bg-blue-50/30"
+      className="bg-blue-50/30 h-[calc(100vh-1.2rem)]"
     >
       <SidebarHeader>
-        <div className="flex items-center gap-2">
-          <CircleAlert />
-          {
-            open && (
-              <h1 className="text-xl font-bold text-primary/80 capitalize">Github saas</h1>
-            )
-          }
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <CircleAlert />
+            {
+              open && (
+                <h1 className="text-xl font-bold text-primary/80 capitalize">Github saas</h1>
+              )
+            }
+          </div>
+
+          <SidebarTrigger className={`${open ? '' : 'absolute left-20 bg-transparent'}`} />
         </div>
       </SidebarHeader>
 
