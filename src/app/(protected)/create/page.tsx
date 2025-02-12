@@ -46,6 +46,8 @@ const Create = () => {
     }
   }
 
+  const hasEnoughCredits = checkCredits?.data?.userCredits ? (checkCredits?.data?.fileCount <= checkCredits?.data?.userCredits) : true;
+
   return (
     <div className='flex items-center gap-12 h-full justify-center'>
       <CircleGauge className='h-56 w-auto'/>
@@ -99,7 +101,7 @@ const Create = () => {
             <div className='flex justify-end'>
               <Button 
                 type='submit'
-                disabled={createProject.isPending || checkCredits.isPending}
+                disabled={createProject.isPending || checkCredits.isPending || !hasEnoughCredits}
               >
                 {!!checkCredits.data ? 'Create Project' : 'Check Credits'}
               </Button>
