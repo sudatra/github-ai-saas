@@ -40,6 +40,7 @@ export function AppSidebar() {
     <Sidebar
       collapsible="icon"
       variant="floating"
+      className="bg-blue-50/30"
     >
       <SidebarHeader>
         <div className="flex items-center gap-2">
