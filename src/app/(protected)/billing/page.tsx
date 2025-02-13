@@ -6,9 +6,20 @@ import { createCheckoutSession } from '@/lib/stripe';
 import { api } from '@/trpc/react'
 import { Info } from 'lucide-react';
 import React, { useState } from 'react'
+import TransactionCard from './transaction-card';
+
+export interface TransactionProps {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  credits: number;
+  user: any;
+}
 
 const BillingPage = () => {
   const { data: user } = api.project.getUserCredits.useQuery();
+  const { data: stripeTransactions } = api.project.getUserTransactions.useQuery();
   const [creditsToBuy, setCreditsToBuy] = useState<number[]>([100]);
   const creditsToBuyAmount = creditsToBuy[0]!;
   const price = (creditsToBuyAmount / 50).toFixed(2);
@@ -42,6 +53,20 @@ const BillingPage = () => {
       <Button onClick={() => createCheckoutSession(creditsToBuyAmount)}>
         Buy {creditsToBuyAmount} for ${price}
       </Button>
+
+      <div className='h-4' />
+      <h1 className='text-xl font-semibold'>Transactions</h1>
+      <div className='h-2' />
+      <div className='flex gap-4'>
+        {
+          stripeTransactions?.map((transaction) => (
+            <TransactionCard
+              key={transaction.id}
+              transaction={transaction}
+            />
+          ))
+        }
+      </div>
     </div>
   )
 }

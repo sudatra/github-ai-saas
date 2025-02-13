@@ -205,5 +205,12 @@ export const projectRouter = createTRPCRouter({
       fileCount,
       userCredits: userCredits?.credits || 0
     }
+  }),
+
+  getUserTransactions: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.stripeTransaction.findMany({
+      where: { userId: ctx.user.userId! },
+      include: { user: true }
+    })
   })
 })
