@@ -212,5 +212,57 @@ export const projectRouter = createTRPCRouter({
       where: { userId: ctx.user.userId! },
       include: { user: true }
     })
+  }),
+
+  searchItems: protectedProcedure.input(
+    z.object({
+      projectId: z.string(),
+      searchQuery: z.string(),
+      searchSchema: z.string(),
+      meetingId: z.string().optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    if(input.searchSchema === 'commit') {
+      return await ctx.db.commit.findMany({
+        where: {
+          projectId: input.projectId,
+          commitMessage: { contains: input.searchQuery, mode: 'insensitive' }
+        },
+      })
+    }
+    else if(input.searchSchema === 'question') {
+      return await ctx.db.question.findMany({
+        where: {
+          projectId: input.projectId,
+          question: { contains: input.searchQuery, mode: 'insensitive' }
+        },
+      })
+    }
+    else if(input.searchSchema === 'meeting') {
+      return await ctx.db.meeting.findMany({
+        where: {
+          projectId: input.projectId,
+          name: { contains: input.searchQuery, mode: 'insensitive' }
+        },
+      })
+    }
+    else if(input.searchSchema === 'issue') {
+      return await ctx.db.issue.findMany({
+        where: {
+          meetingId: input?.meetingId,
+          gist: { contains: input.searchQuery, mode: 'insensitive' }
+        },
+      })
+    }
+    else if(input.searchSchema === 'transaction') {
+      const searchCredits = Number(input.searchQuery);
+
+      return await ctx.db.stripeTransaction.findMany({
+        where: {
+          userId: ctx.user.userId!,
+          credits: { equals: searchCredits }
+        },
+      })
+    }
   })
 })

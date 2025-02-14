@@ -27,7 +27,10 @@ const QAPage = () => {
           questions?.map((question, index) => (
             <>
               <SheetTrigger onClick={() => setQuestionIndex(index)}>
-                <div className='flex items-center p-4 gap-4 bg-white rounded-lg shadow border'>
+                <div 
+                  key={question.id}
+                  className='flex items-center p-4 gap-4 bg-white rounded-lg shadow border'
+                >
                   <Image 
                     src={question.user.imageUrl ?? ''}
                     alt='user-avatar'
