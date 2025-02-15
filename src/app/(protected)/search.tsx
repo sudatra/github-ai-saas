@@ -8,7 +8,7 @@ import { Filter, FilterX, SearchIcon } from 'lucide-react'
 import { useParams, usePathname } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
-import { CommitSearchCard } from './search-cards'
+import { CommitSearchCard, IssueSearchCard, MeetingSearchCard, QuestionSearchCard, TransactionSearchCard } from './search-cards'
 
 type Props = {}
 
@@ -57,7 +57,7 @@ const Search = (props: Props) => {
         open={modalOpen}
         onOpenChange={setModalOpen}
       >
-        <DialogContent>
+        <DialogContent className='overflow-scroll h-[75vh] w-auto'>
           <DialogHeader>
             <DialogTitle>
               <p className='flex justify-center items-center text-lg'>Search Results</p>
@@ -81,32 +81,44 @@ const Search = (props: Props) => {
             ) : pathname === '/qa' ? (
               <ul>
                 {
-                  searchResults.data?.map(searchResult => (
-                    <>question</>
+                  searchResults.data?.map((searchResult) => (
+                    <QuestionSearchCard 
+                      question={searchResult}
+                      key={searchResult.id}
+                    />
                   ))
                 }
               </ul>
             ) : pathname === '/meetings' ? (
               <ul>
                 {
-                  searchResults.data?.map(searchResult => (
-                    <>meetings</>
+                  searchResults.data?.map((searchResult) => (
+                    <MeetingSearchCard 
+                      meeting={searchResult}
+                      key={searchResult.id}
+                    />
                   ))
                 }
               </ul>
             ) : pathname.startsWith('/meetings/') ? (
               <ul>
                 {
-                  searchResults.data?.map(searchResult => (
-                    <>issues</>
+                  searchResults.data?.map((searchResult) => (
+                    <IssueSearchCard 
+                      issue={searchResult}
+                      key={searchResult.id}
+                    />
                   ))
                 }
               </ul>
             ) : (
               <ul>
                 {
-                  searchResults.data?.map(searchResult => (
-                    <>transactions</>
+                  searchResults.data?.map((searchResult) => (
+                    <TransactionSearchCard 
+                      transaction={searchResult}
+                      key={searchResult.id}
+                    />
                   ))
                 }
               </ul>
@@ -136,14 +148,6 @@ const Search = (props: Props) => {
           onClick={() => setSearchText('')}
         />
       </div>
-    </>
-  )
-}
-
-const ResultCommitCard = ({ searchResult, pathname }: { searchResult: any, pathname: string }) => {
-  return (
-    <>
-      pathname
     </>
   )
 }

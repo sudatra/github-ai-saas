@@ -236,6 +236,7 @@ export const projectRouter = createTRPCRouter({
           projectId: input.projectId,
           question: { contains: input.searchQuery, mode: 'insensitive' }
         },
+        include: { user: true }
       })
     }
     else if(input.searchSchema === 'meeting') {
@@ -244,6 +245,7 @@ export const projectRouter = createTRPCRouter({
           projectId: input.projectId,
           name: { contains: input.searchQuery, mode: 'insensitive' }
         },
+        include: { issues: true }
       })
     }
     else if(input.searchSchema === 'issue') {
@@ -262,6 +264,7 @@ export const projectRouter = createTRPCRouter({
           userId: ctx.user.userId!,
           credits: { equals: searchCredits }
         },
+        include: { user: true }
       })
     }
   })
